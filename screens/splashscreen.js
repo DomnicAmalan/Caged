@@ -21,7 +21,7 @@ const SplashScreen = () => {
                 </Animated.Text>
                 <View style={styles.subheader}>
                     <Animated.Text style={[styles.text, {opacity: fadeIn.interpolate({inputRange: [0, 1],outputRange: [0, 1], extrapolate: 'clamp'}), textDecorationLine: "underline", fontSize:10}]}>
-                        UNLEASH THE MOVIES
+                        For the People, By the People
                     </Animated.Text>
                 </View>
             </View>

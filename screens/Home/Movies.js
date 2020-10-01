@@ -1,29 +1,30 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {View, Text, FlatList, TouchableOpacity, Image, StatusBar} from 'react-native'
 import { Axios } from 'react-native-axios/lib/axios';
 import { getMovies } from '../apis/api';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Rating from './Rating';
 import * as HomeNavigation from '../Navigators/Homenavigations';
+import { ConfigurationContext } from '../contexts/configurationContext'
 
 
 const MoviesTab = () => {
     const [page, setPage] = useState(3);
     const [moviesList, setMoviesList] = useState([]);
-    
+    const { configuration } = useContext(ConfigurationContext)
 
     useEffect(() => {
         paginatedData()
     }, [])
 
     const paginatedData = async() => {
-       const data = await getMovies(page)
+       const data = await getMovies(page, configuration.value)
        setMoviesList(data)
     }
 
     const onNextPage = async() => {
         try{
-            const data = await getMovies(page + 1)
+            const data = await getMovies(page + 1, configuration.value)
             setMoviesList([...moviesList, ...data])
             setPage(page+1)
         }

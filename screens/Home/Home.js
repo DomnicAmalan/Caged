@@ -19,6 +19,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import LottieView from 'lottie-react-native';
 import * as HomeNavigation from '../Navigators/Homenavigations';
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import {ConfigurationContext} from '../contexts/configurationContext'
 
 
 const SPACING = 10;
@@ -102,9 +103,12 @@ const Backdrop = ({ movies, scrollX }) => {
 export const HomePage = () => {
   const [movies, setMovies] = React.useState([]);
   const scrollX = React.useRef(new Animated.Value(0)).current;
+  const { configuration} = React.useContext(ConfigurationContext)
+  console.log(configuration)
+
   React.useEffect(() => {
     const fetchData = async () => {
-      const movies = await getMovies('');
+      const movies = await getMovies(1, configuration.value);
       setMovies([{ key: 'empty-left' }, ...movies, { key: 'empty-right' }]);
     };
 
@@ -116,8 +120,7 @@ export const HomePage = () => {
   if (movies.length === 0) {
     return <Loading />;
   }
-
-  // console.log(movies)
+  console.log(movies)
   return (
     <View style={styles.container}>
       <Backdrop movies={movies} scrollX={scrollX} />
@@ -174,7 +177,7 @@ export const HomePage = () => {
                 />
                 
                 <Text style={{fontWeight:"bold", fontSize: 20, color: "green" }} numberOfLines={1}>
-                  {item.title}
+                  {item.original_title}
                 </Text>
                 <Rating rating={item.rating} color="tomato"/>
                 <Genres genres={item.genres} />

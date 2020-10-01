@@ -28,14 +28,14 @@ const getImagePath = (path) =>
 const getBackdropPath = (path) =>
   `https://image.tmdb.org/t/p/w370_and_h556_multi_faces${path}`;
 
-export const getMovies = async (page) => {
-  const API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc&page=${page}&with_original_language=ta`;
+export const getMovies = async (page, language) => {
+  const API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&sort_by=release_date.desc&page=${page}&with_original_language=${language}`;
 
   const { results } = await fetch(API_URL).then((x) => x.json());
   const movies = results.map(
     ({
       id,
-      original_title,
+      title,
       poster_path,
       backdrop_path,
       vote_average,
@@ -44,7 +44,7 @@ export const getMovies = async (page) => {
       genre_ids,
     }) => ({
       key: String(id),
-      title: original_title,
+      title: title,
       poster: getImagePath(poster_path),
       backdrop: getBackdropPath(backdrop_path),
       rating: vote_average,
@@ -58,9 +58,9 @@ export const getMovies = async (page) => {
 };
 
 export const getMovieById = async (movieId) => {
-  const API_URL = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US`;
+  const API_URL = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US&append_to_response=releases`;
   const results = await Axios.get(API_URL)
-
+  
   return results.data
 }
 

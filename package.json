@@ -10,7 +10,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.12.0",
     "@react-native-community/masked-view": "^0.1.10",
+    "@react-native-community/netinfo": "^5.9.7",
     "@react-native-community/picker": "^1.8.0",
     "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.9.0",
@@ -18,9 +20,12 @@
     "react": "16.13.1",
     "react-native": "0.63.2",
     "react-native-axios": "^0.17.1",
+    "react-native-dropdown-picker": "^3.7.0",
     "react-native-gesture-handler": "^1.8.0",
+    "react-native-image-colors": "^1.2.4",
     "react-native-inappbrowser-reborn": "^3.4.0",
     "react-native-linear-gradient": "^2.5.6",
+    "react-native-localize": "^1.4.1",
     "react-native-reanimated": "^1.13.0",
     "react-native-safe-area-context": "^3.1.8",
     "react-native-screens": "^2.11.0",
@@ -30,7 +35,8 @@
     "react-native-webview": "^10.9.0",
     "react-native-youtube": "^2.0.1",
     "react-native-ytdl": "^3.2.2",
-    "react-navigation-tabs": "^2.9.0"
+    "react-navigation-tabs": "^2.9.0",
+    "rn-modal-picker": "^0.3.0"
   },
   "devDependencies": {
     "@babel/core": "7.11.6",

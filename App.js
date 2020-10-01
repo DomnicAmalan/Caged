@@ -9,28 +9,59 @@ import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
-  StatusBar
+  StatusBar,
+  Image,
+  View,
+  ToastAndroid
 } from 'react-native';
 import SplashScreen from './screens/splashscreen';
 import {MainApp} from './screens/Main'
-import {Login } from './screens/Home/Login'
-
+import {Login } from './screens/Home/Login';
+import NetInfo from "@react-native-community/netinfo";
+import {Configuration} from './screens/Configuration';
+import AsyncStorage from '@react-native-community/async-storage';
+import {ConfigurationContext } from './screens/contexts/configurationContext'
+ 
 
 const App: () => React$Node = () => {
 
   const [start, setStart] = useState(true);
   const [login, setLogin] = useState(null)
+  const [isInternetConnected, setInternetConnected] = useState(false);
+  const [configuration, setConfig] = useState({})
 
   useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setInternetConnected(state.isConnected);
+      
+    });
+    unsubscribe();
     setTimeout(() => {
       setStart(false)
+      getConfiguration();
+
     }, 3000)
   }, [])
+
+  const getConfiguration = async () => {
+    try {
+
+      // await AsyncStorage.removeItem('movieLanguage')
+      const config = await AsyncStorage.getItem('movieLanguage')
+      setConfig(JSON.parse(config))
+    } catch (e) {
+      // saving error
+    }
+  }
 
   return (
     <>
       <StatusBar backgroundColor='blue' barStyle="default" hidden translucent={true}/>
-      {start ? <SplashScreen /> : <MainApp />}
+      <ConfigurationContext.Provider value={{ configuration, setConfig }}>
+      {configuration ? 
+        <>{!isInternetConnected ? <View style={{flex: 1, backgroundColor: "black", alignItems: "center", justifyContent: "center" }}><Image style={{width: 450, height: 700, resizeMode: "contain"}}  source={require('./screens/assets/noInternet.png')}/></View>:
+        start ? <SplashScreen /> : <MainApp />}</> : <Configuration setConfig={setConfig} />}
+      </ConfigurationContext.Provider>
     </>
   );
 };
