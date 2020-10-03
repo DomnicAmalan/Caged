@@ -36,9 +36,10 @@ const App: () => React$Node = () => {
       
     });
     unsubscribe();
+    getConfiguration();
+
     setTimeout(() => {
       setStart(false)
-      getConfiguration();
 
     }, 3000)
   }, [])
@@ -46,7 +47,7 @@ const App: () => React$Node = () => {
   const getConfiguration = async () => {
     try {
 
-      // await AsyncStorage.removeItem('movieLanguage')
+      await AsyncStorage.removeItem('movieLanguage')
       const config = await AsyncStorage.getItem('movieLanguage')
       setConfig(JSON.parse(config))
     } catch (e) {

@@ -108,7 +108,7 @@ export const HomePage = () => {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const movies = await getMovies(1, configuration.value);
+      const movies = await getMovies(1, configuration.id);
       setMovies([{ key: 'empty-left' }, ...movies, { key: 'empty-right' }]);
     };
 

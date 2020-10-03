@@ -117,6 +117,7 @@ const MoviePreview = ({ route }) => {
                                 // onProgress={onEnd}
                                 // repeat={repeat}
                                 pictureInPicture={true}
+                                hideControlsOnStart={true}
                                 // isExternalPlaybackActive={true}
                                 // onProgress={onEnd}
                                 // defaultMuted

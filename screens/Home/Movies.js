@@ -18,13 +18,13 @@ const MoviesTab = () => {
     }, [])
 
     const paginatedData = async() => {
-       const data = await getMovies(page, configuration.value)
+       const data = await getMovies(page, configuration.id)
        setMoviesList(data)
     }
 
     const onNextPage = async() => {
         try{
-            const data = await getMovies(page + 1, configuration.value)
+            const data = await getMovies(page + 1, configuration.id)
             setMoviesList([...moviesList, ...data])
             setPage(page+1)
         }
