@@ -1,5 +1,7 @@
 import { API_KEY } from '../configs/tmdb';
-import Axios from 'react-native-axios'
+import Axios from 'react-native-axios';
+import { ConfigurationContext } from '../contexts/configurationContext'
+
 
 const genres = {
   12: 'Adventure',
@@ -29,8 +31,7 @@ const getBackdropPath = (path) =>
   `https://image.tmdb.org/t/p/w370_and_h556_multi_faces${path}`;
 
 export const getMovies = async (page, language) => {
-  const API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&sort_by=release_date.desc&page=${page}&with_original_language=${language}`;
-
+  const API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc&page=${page}&with_original_language=${language}`;
   const { results } = await fetch(API_URL).then((x) => x.json());
   const movies = results.map(
     ({
@@ -59,6 +60,7 @@ export const getMovies = async (page, language) => {
 
 export const getMovieById = async (movieId) => {
   const API_URL = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US&append_to_response=releases`;
+
   const results = await Axios.get(API_URL)
   
   return results.data
@@ -76,4 +78,10 @@ export const getImages = async() => {
   const results = await Axios.get(API_URL)
 
   return results.data
+}
+
+export const getMovieRecommendations = async(movieId) => {
+  const API_URL = `https://api.themoviedb.org/3/movie/${movieId}/recommendations?api_key=${API_KEY}`
+  const results = await Axios.get(API_URL)
+  return results.data.results
 }

@@ -104,11 +104,10 @@ export const HomePage = () => {
   const [movies, setMovies] = React.useState([]);
   const scrollX = React.useRef(new Animated.Value(0)).current;
   const { configuration} = React.useContext(ConfigurationContext)
-  console.log(configuration)
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const movies = await getMovies(1, configuration.id);
+      const movies = await getMovies(1, configuration.language.id);
       setMovies([{ key: 'empty-left' }, ...movies, { key: 'empty-right' }]);
     };
 
@@ -120,7 +119,6 @@ export const HomePage = () => {
   if (movies.length === 0) {
     return <Loading />;
   }
-  console.log(movies)
   return (
     <View style={styles.container}>
       <Backdrop movies={movies} scrollX={scrollX} />
@@ -177,7 +175,7 @@ export const HomePage = () => {
                 />
                 
                 <Text style={{fontWeight:"bold", fontSize: 20, color: "green" }} numberOfLines={1}>
-                  {item.original_title}
+                  {item.title}
                 </Text>
                 <Rating rating={item.rating} color="tomato"/>
                 <Genres genres={item.genres} />

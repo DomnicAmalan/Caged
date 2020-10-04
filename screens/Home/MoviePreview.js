@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Animated, Alert, Dimensions } from 'react-native';
-import {getMovieById, getVideos, getImages} from '../apis/api';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Animated, FlatList, Dimensions, Image } from 'react-native';
+import {getMovieById, getVideos, getMovieRecommendations} from '../apis/api';
 import ytdl from "react-native-ytdl"
 import VideoPlayer from 'react-native-video-player';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -9,9 +9,12 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import * as HomeNavigation from '../Navigators/Homenavigations';
 import * as RNLocalize from "react-native-localize";
 import ImageColors from "react-native-image-colors";
+import {ConfigurationContext} from '../contexts/configurationContext'
 
 const MoviePreview = ({ route }) => {
     const movieId = route.params.movieId
+
+    const {configuration} = useContext(ConfigurationContext)
 
     const [images, setImages] = useState([]);
     const [videos, setVideos] = useState([]);
@@ -19,24 +22,25 @@ const MoviePreview = ({ route }) => {
     const [genres, setGenres] = useState([]);
     const [trailerLoad, setTrailerLoad] =useState(true);
     const [colors, setColors] = useState({});
-    const progress = new Animated.Value(0);
     const [currentTrailerIndex, setCurrentTrailerIndex] = useState(0);
-    const [repeat, setRepeat] = useState(false);
     const [playNextTrailer, setPlaynextTrailer] = useState(true);
     const [certification, setCertification] =useState(null);
+    const [recommendations, setRecommendation] = useState([])
 
 
     useEffect(() => {
         getMovieDetails();
+        return () => {
+        };
     }, [])
 
     const getMovieDetails = async() => {
         const detailsMovie = await getMovieById(movieId);
         const {results} = await getVideos(movieId)
+        const recommendations = await getMovieRecommendations(movieId);
+        setRecommendation(recommendations)
         let videoData = []
-        console.log(detailsMovie.releases)
-        const certifications = detailsMovie.releases.countries.filter(country =>   { return country.iso_3166_1 === 'IN' });
-        console.log(certifications)
+        const certifications = detailsMovie.releases.countries.filter(country =>   { return country.iso_3166_1 === configuration.country.id  });
 
         for (let i=0; i<results.length; i++){
             const urlreturn = await videoUrl(results[i]["key"])
@@ -49,6 +53,7 @@ const MoviePreview = ({ route }) => {
                 ): null
             
         }
+
         getColorFromURL(detailsMovie.poster_path)
         setGenres(detailsMovie.genres)
         videoData.length ?  setVideos(videoData) : null
@@ -94,6 +99,17 @@ const MoviePreview = ({ route }) => {
         const playableIndex = videos.length
         const nextIndex = currentTrailerIndex + 1
         nextIndex < playableIndex ? setCurrentTrailerIndex(nextIndex) : setPlaynextTrailer(false)
+    }
+
+    const renderSuggestions = (item) => {
+        return(
+            <View style={{flex:1, marginVertical:30, marginHorizontal: 5}}>
+                <TouchableOpacity onPress={() => HomeNavigation.push('moviepreview', {movieId: item.id})}>
+                    <Image style={{ height:150, width:100 }} source={{uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`}}/> 
+                </TouchableOpacity>
+                
+            </View>
+        )
     }
 
     
@@ -185,10 +201,17 @@ const MoviePreview = ({ route }) => {
                     </ScrollView>
                 </View>
             </View>    
-            <View style={{flex:1, backgroundColor: "black"}}>
-                <ScrollView horizontal={true}>
-                    
-                </ScrollView>
+            <View style={{flex:1, backgroundColor: "black", marginTop: 30}}>
+                <Text style={{color: "white", fontSize:25, fontWeight:"bold", marginHorizontal: 20}}>Suggestions</Text>
+                <FlatList
+                    horizontal={true}
+                    // numColumns={3}
+                    data={recommendations}
+                    renderItem={({ item }) => renderSuggestions(item)}
+                    // onEndReached={() => onNextPage()}
+                    onEndReachedThreshold={10}
+                    keyExtractor={(item, index) => index.toString()}
+                />
             </View>
         </View>
     )

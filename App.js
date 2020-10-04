@@ -33,10 +33,10 @@ const App: () => React$Node = () => {
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       setInternetConnected(state.isConnected);
-      
+      getConfiguration();
     });
     unsubscribe();
-    getConfiguration();
+    
 
     setTimeout(() => {
       setStart(false)
@@ -47,8 +47,8 @@ const App: () => React$Node = () => {
   const getConfiguration = async () => {
     try {
 
-      await AsyncStorage.removeItem('movieLanguage')
-      const config = await AsyncStorage.getItem('movieLanguage')
+      // await AsyncStorage.removeItem('configs')
+      const config = await AsyncStorage.getItem('configs')
       setConfig(JSON.parse(config))
     } catch (e) {
       // saving error

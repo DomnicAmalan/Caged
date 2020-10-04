@@ -5,7 +5,7 @@ import { Home } from './Index';
 import {LoginContext} from './contexts/LoginContext'
  
 const MainApp = () => {
-    const [isLoggedIn, setLoggedIn] = useState(true)
+    const [isLoggedIn, setLoggedIn] = useState(false)
     const [requestToken, setRequestToken] = useState(null);
    
     return(
