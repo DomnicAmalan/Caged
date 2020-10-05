@@ -32,8 +32,8 @@ const Login = () => {
 
     
     useEffect(() => {
-        Tr()
-    },[])
+        // Tr()
+    },[webScreen])
 
     const Tr = async() => {
 
@@ -45,22 +45,15 @@ const Login = () => {
         })
             
         try{
-            const polling = trakt.get_codes().then(poll => {
-                setWebscreen(true);
-                
-                
-             
-                // verify if app was authorized
-                return trakt.poll_access(poll);
-                
-            }).catch(error => {
-                // error.message == 'Expired' will be thrown if timeout is reached
-            });
-            console.log(polling)
-            // trakt.refresh_token().then(results => {
-            //     console.log(results)
-            //     // results are auto-injected in the main module cache
-            // });
+            try{
+                const polling = trakt.get_codes().then((poll) => {
+                    setCode(poll.user_code)
+                    return trakt.poll_access(poll)
+                });
+            }
+            catch(e){
+                console.log(e)
+            }
         }
         catch(e){
             console.log(e)
@@ -71,7 +64,8 @@ const Login = () => {
     
 
     const navigationChange = (webViewState) => {
-        if(webViewState.url === 'https://www.themoviedb.org/auth/access/approve'){
+        console.log("yyyy")
+        if(webViewState.url === 'https://trakt.tv/activate/authorize'){
             setWebscreen(false)
             setLoggedIn(true)
         }
@@ -79,18 +73,6 @@ const Login = () => {
 
     return(
         <View style={styles.container}>
-            {webScreen ? <>
-            <Text style={{color: "black" , fontSize: 20, fontWeight:"bold"}}>{code}</Text>
-            <Icon name={'close-outline'} size={30} style={{alignSelf: "flex-end", margin: 10, marginHorizontal: 20}} onPress={() => setWebscreen(false)}/>
-            <WebView
-                // ref="webview"
-                source={{uri:`https://trakt.tv/activate`}}
-                onNavigationStateChange={navigationChange}
-                javaScriptEnabled = {true}
-                domStorageEnabled = {true}
-                startInLoadingState={false}
-            /></>:
-            <>
             <Image source={require('../assets/tmdb.png')} style={styles.logo} />
             <LinearGradient start={{x: 1, y: 0}} 
                     colors={['#0d253f', '#01b4e4', '#90cea1' ]}
@@ -99,8 +81,7 @@ const Login = () => {
                 <TouchableOpacity style={styles.button} onPress={() => getRequestToken()}>
                             <Text style={styles.buttonText}>Login</Text>
                 </TouchableOpacity>
-            </LinearGradient></>
-            }
+            </LinearGradient>
         </View>
     )
 }

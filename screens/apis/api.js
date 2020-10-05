@@ -22,7 +22,16 @@ const genres = {
   10749: 'Romance',
   10751: 'Family',
   10752: 'War',
+  10759: 'Action & Adventure',
+  10762: 'Kids',
+  10763: 'News',
+  10764: 'Reality',
+  10765: 'Sci-Fi & Fantasy',
+  10766: 'Soap',
+  10767: 'Talk',
+  10768: 'War & Politics',
   10770: 'TV Movie',
+  
 };
 
 const getImagePath = (path) =>
@@ -30,8 +39,9 @@ const getImagePath = (path) =>
 const getBackdropPath = (path) =>
   `https://image.tmdb.org/t/p/w370_and_h556_multi_faces${path}`;
 
-export const getMovies = async (page, language) => {
-  const API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc&page=${page}&with_original_language=${language}`;
+export const getMovies = async (page, language, media_type) => {
+  const API_URL = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${API_KEY}&sort_by=popularity.desc&page=${page}&with_original_language=${language}`;
+  console.log(API_URL)
   const { results } = await fetch(API_URL).then((x) => x.json());
   const movies = results.map(
     ({
@@ -58,16 +68,58 @@ export const getMovies = async (page, language) => {
   return movies;
 };
 
-export const getMovieById = async (movieId) => {
-  const API_URL = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US&append_to_response=releases`;
+export const getTrending = async (media_type, time_window) => {
+  const API_URL = `https://api.themoviedb.org/3/trending/${media_type}/${time_window}?api_key=${API_KEY}`;
+  console.log(API_URL)
+  const { results } = await fetch(API_URL).then((x) => x.json());
+  const movies = results.map(
+    ({
+      id,
+      title,
+      poster_path,
+      backdrop_path,
+      vote_average,
+      overview,
+      release_date,
+      genre_ids,
+      media_type,
+      name,
+    }) => ({
+      key: String(id),
+      title: title ? title: name,
+      poster: getImagePath(poster_path),
+      backdrop: getBackdropPath(backdrop_path),
+      rating: vote_average,
+      description: overview,
+      releaseDate: release_date,
+      genres: genre_ids.map((genre) => genres[genre]),
+      mediaType: media_type
+    })
+  );
+
+  return movies;
+};
+
+export const getItemById = async (type, Id) => {
+  const API_URL = `https://api.themoviedb.org/3/${type}/${Id}?api_key=${API_KEY}&language=en-US&append_to_response=releases`;
+  let certification = []
+  
 
   const results = await Axios.get(API_URL)
+  if(type === 'tv'){
+    const API_URL_1 = `https://api.themoviedb.org/3/tv/${Id}/content_ratings?api_key=${API_KEY}`
+    console.log(API_URL_1)
+    const d = await Axios.get(API_URL_1)
+    certification = d.data.results
+  }
+
+  certification ? results.data['certifications'] = (certification): null
   
   return results.data
 }
 
-export const getVideos = async(movieId) => {
-  const API_URL = `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}&language=en-US`
+export const getVideos = async(type, Id) => {
+  const API_URL = `https://api.themoviedb.org/3/${type}/${Id}/videos?api_key=${API_KEY}&language=en-US`
   const results = await Axios.get(API_URL)
 
   return results.data
@@ -80,8 +132,9 @@ export const getImages = async() => {
   return results.data
 }
 
-export const getMovieRecommendations = async(movieId) => {
-  const API_URL = `https://api.themoviedb.org/3/movie/${movieId}/recommendations?api_key=${API_KEY}`
+export const getMovieRecommendations = async(type, Id) => {
+  const API_URL = `https://api.themoviedb.org/3/${type}/${Id}/recommendations?api_key=${API_KEY}`
   const results = await Axios.get(API_URL)
   return results.data.results
 }
+

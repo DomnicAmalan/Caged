@@ -1,46 +1,40 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Animated, FlatList, Dimensions, Image } from 'react-native';
-import {getItemById, getVideos, getMovieRecommendations} from '../apis/api';
-import ytdl from "react-native-ytdl"
-import VideoPlayer from 'react-native-video-player';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/Ionicons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
+import React, {useEffect, useState,useContext} from 'react';
+import {View, Text, TouchableOpacity, Dimensions, ScrollView} from 'react-native';
+import {getItemById, getVideos} from '../apis/api';
 import * as HomeNavigation from '../Navigators/Homenavigations';
-import * as RNLocalize from "react-native-localize";
+import Icon from 'react-native-vector-icons/Ionicons';
+import ytdl from "react-native-ytdl";
+import VideoPlayer from 'react-native-video-player';
 import ImageColors from "react-native-image-colors";
-import {ConfigurationContext} from '../contexts/configurationContext'
+import {ConfigurationContext} from '../contexts/configurationContext';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 
-const MoviePreview = ({ route }) => {
-    const movieId = route.params.id
 
-    const {configuration} = useContext(ConfigurationContext)
 
-    const [images, setImages] = useState([]);
+const TvPreview =({ route }) => {
+    const tvId = route.params.id
+    const [tv, setTv] = useState({})
     const [videos, setVideos] = useState([]);
-    const [movieDetails, setMovieDetails] = useState([]);
-    const [genres, setGenres] = useState([]);
     const [trailerLoad, setTrailerLoad] =useState(true);
     const [colors, setColors] = useState({});
     const [currentTrailerIndex, setCurrentTrailerIndex] = useState(0);
-    const [playNextTrailer, setPlaynextTrailer] = useState(true);
     const [certification, setCertification] =useState(null);
-    const [recommendations, setRecommendation] = useState([])
-
+    const [playNextTrailer, setPlaynextTrailer] = useState(true);
+    const {configuration} = useContext(ConfigurationContext);
+    const [genres, setGenres] = useState([]);
 
     useEffect(() => {
-        getMovieDetails();
-        return () => {
-        };
+        getTvDetails();
     }, [])
 
-    const getMovieDetails = async() => {
-        const detailsMovie = await getItemById('movie',movieId);
-        const {results} = await getVideos('movie',movieId)
-        const recommendations = await getMovieRecommendations('movie',movieId);
-        setRecommendation(recommendations)
+    const getTvDetails = async() => {
+        const detailsTv = await getItemById('tv',tvId);
+        setTv(detailsTv)
+        // console.log(detailsTv)
+        const {results} = await getVideos('tv', tvId)
+        const certifications = detailsTv.certifications.filter(country =>   { return country.iso_3166_1 === configuration.country.id  })
+
         let videoData = []
-        const certifications = detailsMovie.releases.countries.filter(country =>   { return country.iso_3166_1 === configuration.country.id  });
 
         for (let i=0; i<results.length; i++){
             const urlreturn = await videoUrl(results[i]["key"])
@@ -53,36 +47,16 @@ const MoviePreview = ({ route }) => {
                 ): null
             
         }
-
-        getColorFromURL(detailsMovie.poster_path)
-        setGenres(detailsMovie.genres)
-        videoData.length ?  setVideos(videoData) : null
+        getColorFromURL(detailsTv.poster_path)
+        setGenres(detailsTv.genres)
+        setVideos(videoData)
         setTrailerLoad(false)
-        setMovieDetails(detailsMovie)
         certifications ? setCertification(certifications[0]) : null
     }
 
-    const  getColorFromURL = async(path) => {
-        const colors = await ImageColors.getColors(`https://image.tmdb.org/t/p/original/${path}`)
-        setColors(colors)
-    }
-
-    const videoUrl = async(id) => {
-        const youtubeURL = `http://www.youtube.com/watch?v=${id}`;
-        try{
-            const urls = await ytdl(youtubeURL, { quality: 'highest', filter: format => format.container === 'mp4' })
-            return urls[0].url
-        }
-        catch(e){
-            console.log(e.message)
-            return null
-        }
-    }
-
-
     const genreRender = () => {
         let value = [];
-
+        console.log(genres)
         genres.forEach((ele, idx) => {
             value.push(
                 <View key={`genre-${idx}`} style={{flex:1, borderWidth:0.3, marginHorizontal: 20, paddingVertical: 5, borderColor: "#F0E68C", height: 20, justifyContent: "center", borderRadius: 20}}>
@@ -95,26 +69,33 @@ const MoviePreview = ({ route }) => {
         return value
     }
 
+    const  getColorFromURL = async(path) => {
+        const colors = await ImageColors.getColors(`https://image.tmdb.org/t/p/original/${path}`)
+        setColors(colors)
+    }
+
+    const videoUrl = async(id) => {
+        console.log(id)
+        const youtubeURL = `http://www.youtube.com/watch?v=${id}`;
+        try{
+            const urls = await ytdl(youtubeURL, { quality: 'highest', filter: format => format.container === 'mp4' })
+            return urls[0].url
+        }
+        catch(e){
+            console.log(e.message)
+            return null
+        }
+    }
+
     const onEnd = () => {
         const playableIndex = videos.length
         const nextIndex = currentTrailerIndex + 1
         nextIndex < playableIndex ? setCurrentTrailerIndex(nextIndex) : setPlaynextTrailer(false)
     }
 
-    const renderSuggestions = (item) => {
-        return(
-            <View style={{flex:1, marginVertical:30, marginHorizontal: 5}}>
-                <TouchableOpacity onPress={() => HomeNavigation.push('moviepreview', {movieId: item.id})}>
-                    <Image style={{ height:150, width:100 }} source={{uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`}}/> 
-                </TouchableOpacity>
-                
-            </View>
-        )
-    }
 
-    
     return(
-        <View style={{flex: 1, backgroundColor:"black"}}>  
+        <View style={{flex:1,backgroundColor: "black"}}>
             <View style={{flex:1,backgroundColor: "black", maxHeight: 180}}>
                 
                 <View style={{flex:1, justifyContent: "center"}}>
@@ -124,7 +105,7 @@ const MoviePreview = ({ route }) => {
                             <VideoPlayer
                                 key={currentTrailerIndex}
                                 video={{ uri: videos[currentTrailerIndex].url }}
-                                // autoplay={true}
+                                autoplay={true}
                                 onEnd={onEnd}
                                 useNativeControls
                                 // fullScreenOnLongPress={true}
@@ -141,15 +122,14 @@ const MoviePreview = ({ route }) => {
                                 videoWidth={Dimensions.get('screen').width}
                                 videoHeight={180}
                                 customStyles={{playControl: {position: "absolute", flex: 1, bottom: 90, left: "45%"},seekBar: {}, controlButton: {}, seekBarKnob: {backgroundColor: colors.average}, seekBarBackground: {backgroundColor: colors.lightMuted},controls: {},seekBarProgress: {backgroundColor: colors.darkMuted}, playIcon: {color: "#FFFAFA"}}}
-                                thumbnail={{ uri: `https://image.tmdb.org/t/p/original${movieDetails.poster_path}` }}
-                                endThumbnail={{ uri: `https://image.tmdb.org/t/p/original${movieDetails.poster_path}` }}
+                                thumbnail={{ uri: `https://image.tmdb.org/t/p/original${tv.poster_path}` }}
+                                endThumbnail={{ uri: `https://image.tmdb.org/t/p/original${tv.poster_path}` }}
                         />                        
                         </>
                         :
                         !videos.length ?  <Text style={{color: "white", fontSize: 15, alignSelf: "center"}}> No Trailers </Text> : null
                     }
-                </View>  
-                
+                </View> 
                 <View 
                     style={{alignSelf: "flex-end", justifyContent: "center", right: 15, position: "absolute", marginVertical: 8}} 
                     >
@@ -157,16 +137,15 @@ const MoviePreview = ({ route }) => {
                             <Icon name="close" size={25} color={"white"} />
                         </TouchableOpacity>
                 </View>
-            </View>
-            
+            </View> 
             <View style={{flex:1, borderWidth: 0.2, borderBottomColor: "#9370DB", backgroundColor: "black",maxHeight: 170, marginTop: 10}}>
                 <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
                     <ScrollView horizontal={true} style={{width: 20, marginRight: 30, marginLeft: 20}}>
-                        <Text style={{alignSelf: "center", color: "white", fontSize: 20, fontWeight: "bold"}}>{movieDetails.title}</Text>
+                        <Text style={{alignSelf: "center", color: "white", fontSize: 20, fontWeight: "bold"}}>{tv.name}</Text>
                     </ScrollView>
                     {certification ?
                     <View style={{borderWidth: 2, borderRadius: 4, borderColor: "grey",height: 18, marginVertical: 10, right: 10,justifyContent: "center", alignItems: "center", flexDirection: "column", alignSelf: "flex-start"}}>
-                        <Text style={{color: "red", marginHorizontal: 5, fontWeight: "bold"}}>{`${certification.certification}`}</Text>
+                        <Text style={{color: "red", marginHorizontal: 5, fontWeight: "bold"}}>{`${certification.rating}`}</Text>
                     </View>: null}
                     <View 
                         style={{alignSelf: "flex-start", justifyContent: "center", marginVertical: 8, marginRight: 5}} 
@@ -200,33 +179,10 @@ const MoviePreview = ({ route }) => {
                         {genreRender()}
                     </ScrollView>
                 </View>
-            </View>    
-            <View style={{flex:1, backgroundColor: "black", marginTop: 30}}>
-                <Text style={{color: "white", fontSize:25, fontWeight:"bold", marginHorizontal: 20}}>Suggestions</Text>
-                <FlatList
-                    horizontal={true}
-                    // numColumns={3}
-                    data={recommendations}
-                    renderItem={({ item }) => renderSuggestions(item)}
-                    // onEndReached={() => onNextPage()}
-                    onEndReachedThreshold={10}
-                    keyExtractor={(item, index) => index.toString()}
-                />
             </View>
+           
         </View>
     )
 }
 
-var styles = StyleSheet.create({
-    backgroundVideo: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-      width: "100%",
-      height: "30%"
-    },
-  });
-
-export { MoviePreview }
+export { TvPreview }

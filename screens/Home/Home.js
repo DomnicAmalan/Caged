@@ -12,14 +12,16 @@ import {
   Easing
 } from 'react-native';
 const { width, height } = Dimensions.get('window');
-import { getMovies } from '../apis/api';
+import { getMovies, getTrending } from '../apis/api';
 import Genres from './Genres';
 import Rating from './Rating';
 import LinearGradient from 'react-native-linear-gradient';
 import LottieView from 'lottie-react-native';
 import * as HomeNavigation from '../Navigators/Homenavigations';
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
-import {ConfigurationContext} from '../contexts/configurationContext'
+import {ConfigurationContext} from '../contexts/configurationContext';
+import { useState } from 'react';
+// import {Tabbar} from './Tabbar'
 
 
 const SPACING = 10;
@@ -103,25 +105,29 @@ const Backdrop = ({ movies, scrollX }) => {
 export const HomePage = () => {
   const [movies, setMovies] = React.useState([]);
   const scrollX = React.useRef(new Animated.Value(0)).current;
-  const { configuration} = React.useContext(ConfigurationContext)
-
+  const { configuration} = React.useContext(ConfigurationContext);
+  const [mediaType, setMediaType] = useState('tv');
+  const [timeWindow, setTimeWindow] = useState('week');
+  const [showRegional, setRegional] = useState(true);
   React.useEffect(() => {
     const fetchData = async () => {
-      const movies = await getMovies(1, configuration.language.id);
+      const movies = showRegional ? await getMovies(1, configuration.language.id, mediaType === 'all' ? 'movie': 'tv'): await getTrending(mediaType, timeWindow)
       setMovies([{ key: 'empty-left' }, ...movies, { key: 'empty-right' }]);
     };
-
-    if (movies.length === 0) {
-      fetchData(movies);
-    }
-  }, [movies]);
+    
+    fetchData(movies);
+    
+  }, [mediaType, showRegional]);
 
   if (movies.length === 0) {
     return <Loading />;
   }
   return (
     <View style={styles.container}>
+      
       <Backdrop movies={movies} scrollX={scrollX} />
+      
+      
       <StatusBar hidden />
       <Animated.FlatList
         showsHorizontalScrollIndicator={false}
@@ -155,10 +161,8 @@ export const HomePage = () => {
             outputRange: [100, 50, 100],
             extrapolate: 'clamp',
           });
-
           return (
             <View style={{ width: ITEM_SIZE }}>
-              
               <Animated.View 
                 style={{
                   marginHorizontal: SPACING,
@@ -168,11 +172,15 @@ export const HomePage = () => {
                   backgroundColor: 'black',
                   borderRadius: 34,
                 }}
-              ><TouchableOpacity onPress={() => HomeNavigation.navigate('moviepreview', {movieId: item.key})}>
+              ><TouchableOpacity onPress={() => HomeNavigation.navigate(item.mediaType === 'movie' ? 'moviepreview': 'tvpreview', {id: item.key})}>
                 <Image 
                   source={{ uri: item.poster }}
                   style={styles.posterImage}
                 />
+                <View style={{alignItems: "center", flexDirection: "row", justifyContent: "center"}}>
+                  <Text style={{color: "#329999", fontSize: 10, fontWeight: "bold", textTransform: 'uppercase'}}>{item.mediaType}</Text>
+                </View>
+                
                 
                 <Text style={{fontWeight:"bold", fontSize: 20, color: "green" }} numberOfLines={1}>
                   {item.title}
@@ -188,6 +196,33 @@ export const HomePage = () => {
           );
         }}
       />
+      <View style={{flex:1, alignItems: "center", justifyContent: "space-around", flexDirection:"row"}}>
+        <LinearGradient start={{x: 1, y: 0}} 
+            colors={['#0d253f', '#01b4e4', '#90cea1' ]}
+            style={{height: 30, backgroundColor: "white", marginHorizontal: 30, borderRadius: 25, alignItems: "space-between", flexDirection: "row", justifyContent: "space-between"}}
+        >
+          <TouchableHighlight style={{backgroundColor: mediaType === 'all' ? "#0d253f": null, flex:1, borderRadius: 25, height:30}} onPress={() => {mediaType !== 'all' ? [setMediaType('all'),setMovies([])]: null}}>
+            <Text style={{fontSize: 20, fontWeight: "bold", marginHorizontal: 10, color: "white"}}>All</Text>
+          </TouchableHighlight>
+          <TouchableHighlight style={{backgroundColor: mediaType === 'movie' ? "#0d253f": null, flex:1, borderRadius: 25, height:30}} onPress={() => {mediaType !== 'movie' ? setMediaType('movie'): null}}>
+            <Text style={{fontSize: 20, fontWeight: "bold", marginHorizontal: 10, color: "white"}}>Movies</Text>
+          </TouchableHighlight>
+          <TouchableHighlight style={{backgroundColor: mediaType === 'tv' ? "#0d253f": null, flex:1, borderRadius: 25, height:30}} onPress={() => {mediaType !== 'tv' ? setMediaType('tv'): null}}>
+            <Text style={{fontSize: 20, fontWeight: "bold", marginHorizontal: 10, color: "white"}}>TV</Text>
+          </TouchableHighlight>
+        </LinearGradient>
+        <LinearGradient start={{x: 1, y: 0}} 
+            colors={['#0d253f', '#01b4e4', '#90cea1' ]}
+            style={{height: 20, backgroundColor: "white", marginHorizontal: 30, borderRadius: 25, alignItems: "space-between", flexDirection: "row", justifyContent: "space-between"}}
+        >
+          <TouchableHighlight style={{backgroundColor:showRegional ? "#0d253f": null, flex:1, borderRadius: 25, height:30}} onPress={() => setRegional(true)}>
+            <Text style={{fontSize: 15, fontWeight: "bold", marginHorizontal: 10, color: "white"}}>Regional</Text>
+          </TouchableHighlight>
+          <TouchableHighlight style={{backgroundColor: !showRegional ? "#0d253f": null, flex:1, borderRadius: 25, height:30}} onPress={() => setRegional(false)}>
+            <Text style={{fontSize: 15, fontWeight: "bold", marginHorizontal: 10, color: "white"}}>World</Text>
+          </TouchableHighlight>
+        </LinearGradient>
+      </View>
     </View>
   );
 }
