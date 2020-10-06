@@ -138,3 +138,29 @@ export const getMovieRecommendations = async(type, Id) => {
   return results.data.results
 }
 
+export const getTvSeasonById = async(tvId, seasonNumber) => {
+  const API_URL = `https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}?api_key=${API_KEY}`
+  const results = await Axios.get(API_URL)
+  console.log(results.data)
+  const episodeData =  results.data.episodes.map(
+    ({
+      episode_number,
+      name,
+      id,
+      overview,
+      still_path,
+      vote_average
+    }) => 
+    ({
+      episodeNumber: episode_number,
+      name: name,
+      id: id,
+      overview: overview,
+      poster_path: getImagePath(still_path),
+      ratings: vote_average
+    })
+  );
+  let data = {"poster_path": getImagePath(results.data.poster_path), episodes: episodeData, "overview": results.data.overview}
+  return data
+}
+
