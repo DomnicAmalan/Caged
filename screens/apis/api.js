@@ -101,7 +101,7 @@ export const getTrending = async (media_type, time_window) => {
 };
 
 export const getItemById = async (type, Id) => {
-  const API_URL = `https://api.themoviedb.org/3/${type}/${Id}?api_key=${API_KEY}&language=en-US&append_to_response=releases`;
+  const API_URL = `https://api.themoviedb.org/3/${type}/${Id}?api_key=${API_KEY}&language=en-US&append_to_response=releases,videos`;
   let certification = []
   
 

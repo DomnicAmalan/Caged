@@ -25,6 +25,7 @@ const TvPreview =({ route }) => {
     const [currentSeason, setCurrentSeason] = useState(1)
 
     useEffect(() => {
+
         getTvDetails();
         getEpisodes();
     }, [currentSeason, episodes])
@@ -115,7 +116,7 @@ const TvPreview =({ route }) => {
         if(episodes.episodes){
             episodes.episodes.forEach((item, idx) => {
                 value.push(
-                    <View style={{flex:1, flexDirection: "row",alignItems: "center", }}>
+                    <View key={`episode-${idx}`} style={{flex:1, flexDirection: "row",alignItems: "center", }}>
                         <Image style={{width: 60, height:40, borderRadius: 10,  margin: 10, }} source={{uri: item.poster_path}}/>
                         <View style={{flex:1, borderBottomWidth: 0.3, borderBottomColor: "white",justifyContent:"center"}} >
                             <Text style={{color: "white"}}>
@@ -152,7 +153,7 @@ const TvPreview =({ route }) => {
                             <VideoPlayer
                                 key={currentTrailerIndex}
                                 video={{ uri: videos[currentTrailerIndex].url }}
-                                // autoplay={true}
+                                autoplay={true}
                                 onEnd={onEnd}
                                 useNativeControls
                                 // fullScreenOnLongPress={true}

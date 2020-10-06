@@ -33,16 +33,18 @@ const App: () => React$Node = () => {
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       setInternetConnected(state.isConnected);
-      getConfiguration();
+
+      
     });
+    getConfiguration();
     unsubscribe();
-    
+    console.log(isInternetConnected)
 
     setTimeout(() => {
       setStart(false)
 
     }, 3000)
-  }, [])
+  }, [isInternetConnected])
 
   const getConfiguration = async () => {
     try {

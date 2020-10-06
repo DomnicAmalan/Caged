@@ -19,13 +19,13 @@ const MoviesTab = () => {
     }, [])
 
     const paginatedData = async() => {
-       const data = await getMovies(page, configuration.language.id)
+       const data = await getMovies(page, configuration.language.id, 'movie')
        setMoviesList(data)
     }
 
     const onNextPage = async() => {
         try{
-            const data = await getMovies(page + 1, configuration.language.id)
+            const data = await getMovies(page + 1, configuration.language.id, 'movie')
             setMoviesList([...moviesList, ...data])
             setPage(page+1)
         }
@@ -38,7 +38,7 @@ const MoviesTab = () => {
     const renderItem = (item) => {
         console.log(item.poster)
         return (
-            <TouchableOpacity onPress={() => HomeNavigation.navigate('moviepreview', {movieId: item.key})} 
+            <TouchableOpacity onPress={() => HomeNavigation.navigate('moviepreview', {id: item.key})} 
                      style={{flex:1,alignSelf: "center",//here you can use flex:1 also
                      aspectRatio:1, marginVertical: 20, elevation:10}}>
                     <View style={{flex:1, alignItems: "center", justifyContent: "center"}}>
