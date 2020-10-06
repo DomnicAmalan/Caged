@@ -9,6 +9,8 @@ import ImageColors from "react-native-image-colors";
 import {ConfigurationContext} from '../contexts/configurationContext';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { Picker } from '@react-native-community/picker';
+import Rating from './Rating';
+
 
 const TvPreview =({ route }) => {
     const tvId = route.params.id
@@ -27,17 +29,20 @@ const TvPreview =({ route }) => {
     useEffect(() => {
 
         getTvDetails();
-        getEpisodes();
-    }, [currentSeason, episodes])
+        
+    }, [currentSeason])
 
     const getEpisodes = async() => {
+        setEpisodes([])
        const data = await getTvSeasonById(tvId, currentSeason);
+       
        setEpisodes(data)
     } 
 
     const getTvDetails = async() => {
         const detailsTv = await getItemById('tv',tvId);
-        setTv(detailsTv)
+        
+        getEpisodes();
         // console.log(detailsTv)
         const {results} = await getVideos('tv', tvId)
         const certifications = detailsTv.certifications.filter(country =>   { return country.iso_3166_1 === configuration.country.id  })
@@ -59,7 +64,9 @@ const TvPreview =({ route }) => {
         getColorFromURL(detailsTv.poster_path)
         setGenres(detailsTv.genres)
         setVideos(videoData)
+        setTv(detailsTv)
         setTrailerLoad(false)
+
         certifications ? setCertification(certifications[0]) : null
     }
 
@@ -115,6 +122,7 @@ const TvPreview =({ route }) => {
         let value = []
         if(episodes.episodes){
             episodes.episodes.forEach((item, idx) => {
+                // console.log(item)
                 value.push(
                     <View key={`episode-${idx}`} style={{flex:1, flexDirection: "row",alignItems: "center", }}>
                         <Image style={{width: 60, height:40, borderRadius: 10,  margin: 10, }} source={{uri: item.poster_path}}/>
@@ -122,9 +130,14 @@ const TvPreview =({ route }) => {
                             <Text style={{color: "white"}}>
                                 {item.name}
                             </Text>
-                            <ScrollView horizontal style={{height: 30}}>
+                            <ScrollView horizontal style={{height: 20}}>
                                 <Text style={{color: "white"}}>{item.overview}</Text>
                             </ScrollView>
+                            <View style={{flex:1, flexDirection:"row"}}>
+                                
+                                <Rating rating={item.ratings} color="tomato"/>
+                            </View>
+                           
                         </View>
                        
                     </View>
@@ -133,9 +146,11 @@ const TvPreview =({ route }) => {
         }
         else{
             value.push(
-                <Text>
-                    Loading...
-                </Text>
+                <View  style={{flex:1, flexDirection: "row",alignItems: "center", justifyContent: "center", marginTop:30}}>
+                    <Text style={{color: "white", fontSize: 20, fontWeight: "bold"}}>
+                        Loading...
+                    </Text>
+                </View>
             )
         }
         
@@ -153,7 +168,7 @@ const TvPreview =({ route }) => {
                             <VideoPlayer
                                 key={currentTrailerIndex}
                                 video={{ uri: videos[currentTrailerIndex].url }}
-                                autoplay={true}
+                                // autoplay={true}
                                 onEnd={onEnd}
                                 useNativeControls
                                 // fullScreenOnLongPress={true}
@@ -186,7 +201,6 @@ const TvPreview =({ route }) => {
                         </TouchableOpacity>
                 </View>
             </View>
-            
             <View style={{flex:1, borderWidth: 0.3, borderBottomColor: colors.lightMuted, backgroundColor: "black",maxHeight: 180, marginTop: 10}}>
                 <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
                     <ScrollView horizontal={true} style={{width: 20, marginRight: 30, marginLeft: 20}}>
@@ -229,7 +243,7 @@ const TvPreview =({ route }) => {
                     </ScrollView>
                 </View>
             </View>
-            <View style={{flex:1, justifyContent: "space-between", marginTop: 20, marginHorizontal: 10, flexDirection: "row", maxHeight: 80, borderBottomColor: colors.lightMuted, borderBottomWidth: 0.3,  }}>
+            <View style={{flex:1, justifyContent: "space-between", marginTop: 10, marginHorizontal: 10, flexDirection: "row", maxHeight: 80, borderBottomColor: colors.lightMuted, borderBottomWidth: 0.3,  }}>
                 <View style={{flex:1,backgroundColor:"black", maxWidth: 90,maxHeight: 45}}>
                     <View style={{flex:1, flexDirection: "row", backgroundColor:"black"}}>
                         <Text style={{color: "grey", fontWeight: "bold"}}>seasons: </Text>
@@ -250,12 +264,18 @@ const TvPreview =({ route }) => {
                     <Text style={{color: "grey", fontSize: 12, fontWeight: "bold", }}>{episodes.overview}</Text>
                 </ScrollView>
             </View>
-            <View style={{flex:1}}>
+            <View style={{flex:1, backgroundColor:"black",alignSelf:'stretch', bottom:0}}>
+                
                 <Text style={{color: "white", fontSize:25, fontWeight:"bold", marginHorizontal: 20}}>Episodes</Text>
                 <ScrollView style={{flex:1}}>
                     {renderEpisode()}
                 </ScrollView>
             </View>
+            <View style={{flexDirection: "row", margin: 20, alignItems:"center", justifyContent:"center"}}>
+                <Text style={{color:"grey", fontWeight: "bold"}}>AIR DATE: </Text>
+                <Text style={{color:"white", fontSize: 20, fontWeight:"bold"}}>{episodes.air_date}</Text>
+            </View>
+            {Object.keys(tv).length ? <Rating rating={tv.vote_average} color="tomato"/> : <View style={{alignItems:"center"}}><Text style={{color: "grey", fontSize: 15, fontWeight:"bold"}}>Loading...</Text></View>}
         </View>
     )
 }

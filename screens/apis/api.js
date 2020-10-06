@@ -40,6 +40,7 @@ const getBackdropPath = (path) =>
   `https://image.tmdb.org/t/p/w370_and_h556_multi_faces${path}`;
 
 export const getMovies = async (page, language, media_type) => {
+  console.log("regional")
   const API_URL = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${API_KEY}&sort_by=popularity.desc&page=${page}&with_original_language=${language}`;
   console.log(API_URL)
   const { results } = await fetch(API_URL).then((x) => x.json());
@@ -69,8 +70,8 @@ export const getMovies = async (page, language, media_type) => {
 };
 
 export const getTrending = async (media_type, time_window) => {
+  console.log("world")
   const API_URL = `https://api.themoviedb.org/3/trending/${media_type}/${time_window}?api_key=${API_KEY}`;
-  console.log(API_URL)
   const { results } = await fetch(API_URL).then((x) => x.json());
   const movies = results.map(
     ({
@@ -104,17 +105,15 @@ export const getItemById = async (type, Id) => {
   const API_URL = `https://api.themoviedb.org/3/${type}/${Id}?api_key=${API_KEY}&language=en-US&append_to_response=releases,videos`;
   let certification = []
   
-
   const results = await Axios.get(API_URL)
   if(type === 'tv'){
     const API_URL_1 = `https://api.themoviedb.org/3/tv/${Id}/content_ratings?api_key=${API_KEY}`
-    console.log(API_URL_1)
     const d = await Axios.get(API_URL_1)
     certification = d.data.results
   }
 
   certification ? results.data['certifications'] = (certification): null
-  
+ 
   return results.data
 }
 
@@ -141,7 +140,6 @@ export const getMovieRecommendations = async(type, Id) => {
 export const getTvSeasonById = async(tvId, seasonNumber) => {
   const API_URL = `https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}?api_key=${API_KEY}`
   const results = await Axios.get(API_URL)
-  console.log(results.data)
   const episodeData =  results.data.episodes.map(
     ({
       episode_number,
@@ -160,7 +158,7 @@ export const getTvSeasonById = async(tvId, seasonNumber) => {
       ratings: vote_average
     })
   );
-  let data = {"poster_path": getImagePath(results.data.poster_path), episodes: episodeData, "overview": results.data.overview}
+  let data = {"poster_path": getImagePath(results.data.poster_path), episodes: episodeData, "overview": results.data.overview, air_date: results.data.air_date, }
   return data
 }
 

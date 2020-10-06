@@ -36,7 +36,6 @@ const MoviesTab = () => {
     }
 
     const renderItem = (item) => {
-        console.log(item.poster)
         return (
             <TouchableOpacity onPress={() => HomeNavigation.navigate('moviepreview', {id: item.key})} 
                      style={{flex:1,alignSelf: "center",//here you can use flex:1 also

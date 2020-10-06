@@ -111,7 +111,9 @@ export const HomePage = () => {
   const [showRegional, setRegional] = useState(true);
   React.useEffect(() => {
     const fetchData = async () => {
-      const movies = showRegional ? await getMovies(1, configuration.language.id, mediaType === 'all' ? 'movie': 'tv'): await getTrending(mediaType, timeWindow)
+      console.log(mediaType)
+      setMovies([])
+      const movies = showRegional ? await getMovies(1, configuration.language.id, mediaType === 'all' ? 'movie': mediaType === 'movie' ? 'movie': 'tv'): await getTrending(mediaType, timeWindow)
       setMovies([{ key: 'empty-left' }, ...movies, { key: 'empty-right' }]);
     };
     

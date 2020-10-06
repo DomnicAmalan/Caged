@@ -9,7 +9,8 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import * as HomeNavigation from '../Navigators/Homenavigations';
 import * as RNLocalize from "react-native-localize";
 import ImageColors from "react-native-image-colors";
-import {ConfigurationContext} from '../contexts/configurationContext'
+import {ConfigurationContext} from '../contexts/configurationContext';
+import Rating from './Rating'
 
 const MoviePreview = ({ route }) => {
     const movieId = route.params.id
@@ -30,35 +31,37 @@ const MoviePreview = ({ route }) => {
 
     useEffect(() => {
         getMovieDetails();
-        return () => {
-        };
+        
     }, [])
 
     const getMovieDetails = async() => {
         const detailsMovie = await getItemById('movie',movieId);
+        setMovieDetails(detailsMovie)
+
         const {results} = await getVideos('movie',movieId)
         const recommendations = await getMovieRecommendations('movie',movieId);
         setRecommendation(recommendations)
         let videoData = []
         const certifications = detailsMovie.releases.countries.filter(country =>   { return country.iso_3166_1 === configuration.country.id  });
-
-        for (let i=0; i<results.length; i++){
-            const urlreturn = await videoUrl(results[i]["key"])
-            urlreturn ? 
-                videoData.push(
-                    {
-                        url :  urlreturn,
-                        title: results[i].name 
-                    }
-                ): null
-            
+        if(results.length){
+            for (let i=0; i<results.length; i++){
+                const urlreturn = await videoUrl(results[i]["key"])
+                urlreturn ? 
+                    videoData.push(
+                        {
+                            url :  urlreturn,
+                            title: results[i].name 
+                        }
+                    ): null
+                
+            }
         }
+        
 
         getColorFromURL(detailsMovie.poster_path)
         setGenres(detailsMovie.genres)
         videoData.length ?  setVideos(videoData) : null
         setTrailerLoad(false)
-        setMovieDetails(detailsMovie)
         certifications ? setCertification(certifications[0]) : null
     }
 
@@ -104,7 +107,7 @@ const MoviePreview = ({ route }) => {
     const renderSuggestions = (item) => {
         return(
             <View style={{flex:1, marginVertical:30, marginHorizontal: 5}}>
-                <TouchableOpacity onPress={() => HomeNavigation.push('moviepreview', {movieId: item.id})}>
+                <TouchableOpacity onPress={() => HomeNavigation.push('moviepreview', {id: item.id})}>
                     <Image style={{ height:150, width:100 }} source={{uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`}}/> 
                 </TouchableOpacity>
                 
@@ -112,6 +115,7 @@ const MoviePreview = ({ route }) => {
         )
     }
 
+    console.log(movieDetails, "yyyyyyyyyyyyyyyyyyyyyyyyyyy")
     
     return(
         <View style={{flex: 1, backgroundColor:"black"}}>  
@@ -159,11 +163,12 @@ const MoviePreview = ({ route }) => {
                 </View>
             </View>
             
-            <View style={{flex:1, borderWidth: 0.2, borderBottomColor: "#9370DB", backgroundColor: "black",maxHeight: 170, marginTop: 10}}>
+            <View style={{flex:1, borderWidth: 0.3, borderBottomColor: "#9370DB", backgroundColor: "black",maxHeight: 200, marginTop: 10}}>
                 <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
                     <ScrollView horizontal={true} style={{width: 20, marginRight: 30, marginLeft: 20}}>
                         <Text style={{alignSelf: "center", color: "white", fontSize: 20, fontWeight: "bold"}}>{movieDetails.title}</Text>
                     </ScrollView>
+                    
                     {certification ?
                     <View style={{borderWidth: 2, borderRadius: 4, borderColor: "grey",height: 18, marginVertical: 10, right: 10,justifyContent: "center", alignItems: "center", flexDirection: "column", alignSelf: "flex-start"}}>
                         <Text style={{color: "red", marginHorizontal: 5, fontWeight: "bold"}}>{`${certification.certification}`}</Text>
@@ -180,7 +185,9 @@ const MoviePreview = ({ route }) => {
                             }
                             
                     </View>
+                   
                 </View>
+                
                 <View style={{flexDirection:"row"}}>
                     <TouchableOpacity style={{width: 100, marginHorizontal: 20,marginVertical: 30, flexDirection: "row" }}>
                         <View style={{flex: 1, backgroundColor: "white", borderRadius: 2, marginHorizontal: 10, height: 40, justifyContent:"center", alignItems: "center", flexDirection: "row"}}>
@@ -213,6 +220,11 @@ const MoviePreview = ({ route }) => {
                     keyExtractor={(item, index) => index.toString()}
                 />
             </View>
+            <View style={{flexDirection: "row", margin: 20, alignItems:"center", justifyContent:"center"}}>
+                <Text style={{color:"grey", fontWeight: "bold"}}>RELAEASE DATE: </Text>
+                <Text style={{color:"white", fontSize: 20, fontWeight:"bold"}}>{movieDetails.release_date}</Text>
+            </View>
+            {Object.keys(movieDetails).length ? <Rating rating={movieDetails.vote_average} color="tomato"/> : <><Text style={{color: "white"}}>Loading...</Text></>}
         </View>
     )
 }
