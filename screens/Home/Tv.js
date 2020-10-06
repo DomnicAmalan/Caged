@@ -37,7 +37,7 @@ const TV = () => {
 
     const renderItem = (item) => {
         return (
-            <TouchableOpacity onPress={() => HomeNavigation.navigate('tvpreview', {id: item.key})} 
+            <TouchableOpacity style={{flex:1}} onPress={() => HomeNavigation.navigate('tvpreview', {id: item.key})} 
                      style={{flex:1,alignSelf: "center",//here you can use flex:1 also
                      aspectRatio:1, marginVertical: 20, elevation:10}}>
                     <View style={{flex:1, alignItems: "center", justifyContent: "center"}}>
@@ -50,20 +50,24 @@ const TV = () => {
     return(
         <View style={{flex: 1, justifyContent: "center", backgroundColor: "black"}}>
             <StatusBar hidden />
-            <View style={{textAlign: "center", margin: 5, alignSelf: "center", flexDirection: "row", width: "100%", textAlign: "center"}}>
-                <Text style={{color: "white", alignSelf: "center"}}>TV</Text>
-                <View style={{alignSelf: "flex-end"}}>
-                    <Icon name="search" size={25} color={"red"}/>
+            <View style={{flex: 1, flexDirection:"row",maxHeight: 30}}>
+                <View style={{flex:1,alignItems:"center", justifyContent: "center"}}>
+                    <Text style={{color: "white", fontSize: 20, alignSelf:"center", fontWeight:"bold"}}>TV</Text>
                 </View>
+                <TouchableOpacity style={{justifyContent:"center", marginRight:10}} onPress={() => HomeNavigation.navigate('search')}>
+                    <Icon name="search" size={25} color={"red"}/>
+                </TouchableOpacity>
             </View>
-            <FlatList
-                numColumns={3}
-                data={tvList}
-                renderItem={({ item }) => renderItem(item)}
-                onEndReached={() => onNextPage()}
-                onEndReachedThreshold={10}
-                keyExtractor={(item, index) => index.toString()}
-            />
+            <View style={{flex:1}}>
+                <FlatList
+                    numColumns={3}
+                    data={tvList}
+                    renderItem={({ item }) => renderItem(item)}
+                    onEndReached={() => onNextPage()}
+                    onEndReachedThreshold={10}
+                    keyExtractor={(item, index) => index.toString()}
+                />
+            </View>
         </View>
     )
 }

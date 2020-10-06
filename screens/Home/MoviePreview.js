@@ -17,7 +17,6 @@ const MoviePreview = ({ route }) => {
 
     const {configuration} = useContext(ConfigurationContext)
 
-    const [images, setImages] = useState([]);
     const [videos, setVideos] = useState([]);
     const [movieDetails, setMovieDetails] = useState([]);
     const [genres, setGenres] = useState([]);
@@ -224,7 +223,7 @@ const MoviePreview = ({ route }) => {
                 <Text style={{color:"grey", fontWeight: "bold"}}>RELAEASE DATE: </Text>
                 <Text style={{color:"white", fontSize: 20, fontWeight:"bold"}}>{movieDetails.release_date}</Text>
             </View>
-            {Object.keys(movieDetails).length ? <Rating rating={movieDetails.vote_average} color="tomato"/> : <><Text style={{color: "white"}}>Loading...</Text></>}
+            {Object.keys(movieDetails).length ? <Rating rating={movieDetails.vote_average} color="tomato"/> :<View style={{alignItems:"center"}}><Text style={{color: "grey", fontSize: 15, fontWeight:"bold"}}>Loading...</Text></View>}
         </View>
     )
 }

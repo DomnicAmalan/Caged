@@ -59,7 +59,7 @@ const App: () => React$Node = () => {
 
   return (
     <>
-      <StatusBar backgroundColor='blue' barStyle="default" hidden translucent={true}/>
+      <StatusBar  hidden />
       <ConfigurationContext.Provider value={{ configuration, setConfig }}>
       {configuration ? 
         <>{!isInternetConnected ? <View style={{flex: 1, backgroundColor: "black", alignItems: "center", justifyContent: "center" }}><Image style={{width: 450, height: 700, resizeMode: "contain"}}  source={require('./screens/assets/noInternet.png')}/></View>:

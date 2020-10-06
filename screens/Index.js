@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { MoviesTab, TV, HomePage, MoviePreview, User, TvPreview } from './Home/Index';
+import { MoviesTab, TV, HomePage, MoviePreview, User, TvPreview, Search } from './Home/Index';
 import Icon from 'react-native-vector-icons/Ionicons'
 import Icon2 from 'react-native-vector-icons/FontAwesome5'
 import * as HomeNavigation from './Navigators/Homenavigations';
@@ -26,6 +26,7 @@ const Home = () => {
                     <HomeStack.Screen name="moviepreview" component={ MoviePreview }/>
                     <HomeStack.Screen name="user" component={ User }/>
                     <HomeStack.Screen name="tvpreview" component={ TvPreview }/>
+                    <HomeStack.Screen name="search" component={Search} />
                 </HomeStack.Navigator>
                 <View style={styles.topTab}>
                     <TouchableOpacity onPress={() => HomeNavigation.navigate('home')}>
@@ -37,12 +38,13 @@ const Home = () => {
                     <TouchableOpacity onPress={() => HomeNavigation.navigate('tv')}>
                         <Icon name="desktop-outline" size={20} color={"#FFC145"}/>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => HomeNavigation.navigate('search')}>
                         <Icon name="search" size={20} color={"#FB5558"}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => HomeNavigation.navigate('user')}>
                         <Icon2 name="user-secret" size={20} color={"#fb55ab"}/>
                     </TouchableOpacity>
+                    
                 </View>
             </NavigationContainer>
         </View> 
