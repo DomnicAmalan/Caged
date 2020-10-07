@@ -7,5 +7,5 @@ import { User } from './User';
 import { TvPreview} from './TvPreview';
 import {Search} from './Search'
 
-export { MoviesTab , TV, HomePage, MoviePreview, User, TvPreview , Search}
+export { MoviesTab , TV, HomePage, MoviePreview, User, TvPreview, Search }
  

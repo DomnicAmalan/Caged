@@ -54,7 +54,7 @@ const MoviesTab = () => {
                 <View style={{flex:1,alignItems:"center", justifyContent: "center"}}>
                     <Text style={{color: "white", fontSize: 20, alignSelf:"center", fontWeight:"bold"}}>Movies</Text>
                 </View>
-                <TouchableOpacity style={{justifyContent:"center", marginRight:10}} onPress={() => HomeNavigation.navigate('search')}>
+                <TouchableOpacity style={{justifyContent:"center", marginRight:10}} onPress={() => HomeNavigation.navigate('search', {from: 'movie'})}>
                     <Icon name="search" size={25} color={"red"}/>
                 </TouchableOpacity>
             </View>

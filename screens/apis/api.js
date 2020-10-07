@@ -34,7 +34,7 @@ const genres = {
   
 };
 
-const getImagePath = (path) =>
+export const getImagePath = (path) =>
   `https://image.tmdb.org/t/p/original${path}`;
 const getBackdropPath = (path) =>
   `https://image.tmdb.org/t/p/w370_and_h556_multi_faces${path}`;
@@ -102,10 +102,14 @@ export const getTrending = async (media_type, time_window) => {
 };
 
 export const getItemById = async (type, Id) => {
+  console.log(type, "yyy")
   const API_URL = `https://api.themoviedb.org/3/${type}/${Id}?api_key=${API_KEY}&language=en-US&append_to_response=releases,videos`;
+  console.log(API_URL )
   let certification = []
+  try{
+    const results = await Axios.get(API_URL)
   
-  const results = await Axios.get(API_URL)
+  
   if(type === 'tv'){
     const API_URL_1 = `https://api.themoviedb.org/3/tv/${Id}/content_ratings?api_key=${API_KEY}`
     const d = await Axios.get(API_URL_1)
@@ -114,7 +118,10 @@ export const getItemById = async (type, Id) => {
 
   certification ? results.data['certifications'] = (certification): null
  
-  return results.data
+  return results.data}
+  catch(e){
+    console.log(e)
+  }
 }
 
 export const getVideos = async(type, Id) => {
@@ -160,5 +167,12 @@ export const getTvSeasonById = async(tvId, seasonNumber) => {
   );
   let data = {"poster_path": getImagePath(results.data.poster_path), episodes: episodeData, "overview": results.data.overview, air_date: results.data.air_date, }
   return data
+}
+
+export const searchItem = async(page,type, query) => {
+  console.log(type, query)
+  const API_URL = `https://api.themoviedb.org/3/search/${type}?api_key=${API_KEY}&language=en-US&query=${query}&page=${page}`;
+  const results = await Axios.get(API_URL)
+  return results.data
 }
 

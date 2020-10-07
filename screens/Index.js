@@ -9,6 +9,7 @@ import * as HomeNavigation from './Navigators/Homenavigations';
 import {LoginContext} from './contexts/LoginContext'
 
 
+
 const HomeStack = createStackNavigator();
 
 
@@ -38,7 +39,7 @@ const Home = () => {
                     <TouchableOpacity onPress={() => HomeNavigation.navigate('tv')}>
                         <Icon name="desktop-outline" size={20} color={"#FFC145"}/>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => HomeNavigation.navigate('search')}>
+                    <TouchableOpacity onPress={() => HomeNavigation.navigate('search', {from: "multi"})}>
                         <Icon name="search" size={20} color={"#FB5558"}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => HomeNavigation.navigate('user')}>

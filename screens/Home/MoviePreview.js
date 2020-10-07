@@ -10,7 +10,7 @@ import * as HomeNavigation from '../Navigators/Homenavigations';
 import * as RNLocalize from "react-native-localize";
 import ImageColors from "react-native-image-colors";
 import {ConfigurationContext} from '../contexts/configurationContext';
-import Rating from './Rating'
+import Rating from './Rating';
 
 const MoviePreview = ({ route }) => {
     const movieId = route.params.id

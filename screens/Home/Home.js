@@ -111,7 +111,6 @@ export const HomePage = () => {
   const [showRegional, setRegional] = useState(true);
   React.useEffect(() => {
     const fetchData = async () => {
-      console.log(mediaType)
       setMovies([])
       const movies = showRegional ? await getMovies(1, configuration.language.id, mediaType === 'all' ? 'movie': mediaType === 'movie' ? 'movie': 'tv'): await getTrending(mediaType, timeWindow)
       setMovies([{ key: 'empty-left' }, ...movies, { key: 'empty-right' }]);
@@ -124,6 +123,7 @@ export const HomePage = () => {
   if (movies.length === 0) {
     return <Loading />;
   }
+  
   return (
     <View style={styles.container}>
       
@@ -180,7 +180,7 @@ export const HomePage = () => {
                   style={styles.posterImage}
                 />
                 <View style={{alignItems: "center", flexDirection: "row", justifyContent: "center"}}>
-                  <Text style={{color: "#329999", fontSize: 10, fontWeight: "bold", textTransform: 'uppercase'}}>{item.mediaType}</Text>
+                  <Text style={{color: "#329999", fontSize: 10, fontWeight: "bold", textTransform: 'uppercase'}}>{item.mediaType ? item.mediaType : mediaType}</Text>
                 </View>
                 
                 
