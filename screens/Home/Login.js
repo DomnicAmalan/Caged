@@ -64,7 +64,6 @@ const Login = () => {
     
 
     const navigationChange = (webViewState) => {
-        console.log("yyyy")
         if(webViewState.url === 'https://trakt.tv/activate/authorize'){
             setWebscreen(false)
             setLoggedIn(true)

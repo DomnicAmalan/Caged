@@ -40,9 +40,7 @@ const getBackdropPath = (path) =>
   `https://image.tmdb.org/t/p/w370_and_h556_multi_faces${path}`;
 
 export const getMovies = async (page, language, media_type) => {
-  console.log("regional")
   const API_URL = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${API_KEY}&sort_by=popularity.desc&page=${page}&with_original_language=${language}`;
-  console.log(API_URL)
   const { results } = await fetch(API_URL).then((x) => x.json());
   const movies = results.map(
     ({
@@ -70,7 +68,6 @@ export const getMovies = async (page, language, media_type) => {
 };
 
 export const getTrending = async (media_type, time_window) => {
-  console.log("world")
   const API_URL = `https://api.themoviedb.org/3/trending/${media_type}/${time_window}?api_key=${API_KEY}`;
   const { results } = await fetch(API_URL).then((x) => x.json());
   const movies = results.map(
@@ -102,9 +99,7 @@ export const getTrending = async (media_type, time_window) => {
 };
 
 export const getItemById = async (type, Id) => {
-  console.log(type, "yyy")
   const API_URL = `https://api.themoviedb.org/3/${type}/${Id}?api_key=${API_KEY}&language=en-US&append_to_response=releases,videos`;
-  console.log(API_URL )
   let certification = []
   try{
     const results = await Axios.get(API_URL)
@@ -170,7 +165,6 @@ export const getTvSeasonById = async(tvId, seasonNumber) => {
 }
 
 export const searchItem = async(page,type, query) => {
-  console.log(type, query)
   const API_URL = `https://api.themoviedb.org/3/search/${type}?api_key=${API_KEY}&language=en-US&query=${query}&page=${page}`;
   const results = await Axios.get(API_URL)
   return results.data

@@ -6,7 +6,7 @@ import { colors, sizes, fonts } from '../configs/theme';
 import useDebounce from './Debounce';
 import {searchItem, getImagePath} from '../apis/api'
 import { FlatList, ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
-
+import * as HomeNavigation from '../Navigators/Homenavigations';
 
 const { width, height } = Dimensions.get("window");
 const Search = ({route}) => {
@@ -36,19 +36,35 @@ const Search = ({route}) => {
       setSearching(false)
     } 
 
-    
+    const navigator = (item) => {
+      if(currentSearch === 'multi'){
+        if(item.media_type == 'movie' ){
+          return 'moviepreview'
+        }
+        else if(item.media_type == 'tv'){
+          return 'tvpreview'
+        }
+      }
+      else{
+        if(currentSearch === 'movie'){
+          return 'moviepreview'
+        }
+        else if(item.media_type == 'tv'){
+          return 'tvpreview'
+        }
+      }
+    }
     
 
     const renderItem = (item,index) => {
       return(
-        <TouchableOpacity style={{flex:1, marginVertical:15, alignItems:"center", textAlign:"center", }}>
+        <TouchableOpacity style={{flex:1, marginVertical:15, alignItems:"center", textAlign:"center", }} onPress={() => HomeNavigation.navigate(navigator(item), {id:item.id})}>
               {item.poster_path !== null ? 
                 <Image style={{ height:150, width:100, borderRadius:20 }}  resizeMode='contain' source={{uri:getImagePath(item.poster_path)}}/>
               : <Text style={{flex:1, color: "white", paddingHorizontal: 20, fontWeight:"bold", fontSize:12}}>{item.original_name ? item.original_name : item.original_title}</Text>}
         </TouchableOpacity>
       )
     }
-    console.log(currentSearch)
 
     return(
      
@@ -57,7 +73,7 @@ const Search = ({route}) => {
             <View style={{flex: 1,justifyContent: 'flex-end'}}>
                 <View style={{flex:1, justifyContent: "flex-end",}}>
                   {isSearching ?
-                      <Text style={{flex:1, color: "white", fontSize:40, fontWeight:"bold", alignSelf:"center"}}>Searching</Text>
+                      <Text style={{flex:1, color: "white", fontSize:40, fontWeight:"bold", alignSelf:"center"}}>Searching...</Text>
                     : 
                     <View style={{flex:1}}>
                       {searchResults.length ? 

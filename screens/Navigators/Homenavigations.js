@@ -4,7 +4,6 @@ import { StackActions, useNavigationState, CommonActions } from '@react-navigati
 export const homeNavRef = React.createRef();
 
 export function navigate(name, params) {
-    console.log(params)
     homeNavRef.current?.navigate(name, params);
 }
 

@@ -27,21 +27,18 @@ const TvPreview =({ route }) => {
     const [currentSeason, setCurrentSeason] = useState(1)
 
     useEffect(() => {
-
         getTvDetails();
-        
     }, [currentSeason])
 
     const getEpisodes = async() => {
         setEpisodes([])
-       const data = await getTvSeasonById(tvId, currentSeason);
-       
-       setEpisodes(data)
+        const data = await getTvSeasonById(tvId, currentSeason);
+        setEpisodes(data)
     } 
 
     const getTvDetails = async() => {
         const detailsTv = await getItemById('tv',tvId);
-        
+        setTv(detailsTv)
         getEpisodes();
         // console.log(detailsTv)
         const {results} = await getVideos('tv', tvId)
@@ -64,9 +61,7 @@ const TvPreview =({ route }) => {
         getColorFromURL(detailsTv.poster_path)
         setGenres(detailsTv.genres)
         setVideos(videoData)
-        setTv(detailsTv)
         setTrailerLoad(false)
-
         certifications ? setCertification(certifications[0]) : null
     }
 
@@ -86,8 +81,14 @@ const TvPreview =({ route }) => {
     }
 
     const  getColorFromURL = async(path) => {
-        const colors = await ImageColors.getColors(`https://image.tmdb.org/t/p/original/${path}`)
-        setColors(colors)
+        if(path !== null){
+            const colors = await ImageColors.getColors(`https://image.tmdb.org/t/p/original/${path}`)
+            setColors(colors)
+        }
+        else{
+            const colors = {"average": "#291B1B", "darkMuted": "#101010", "darkVibrant": "#B01018", "dominant": "#101010", "lightMuted": "#A8A8A8", "lightVibrant": "#000000", "muted": "#707070", "platform": "android", "vibrant": "#E81820"}
+            setColors(colors)
+        }
     }
 
     const videoUrl = async(id) => {

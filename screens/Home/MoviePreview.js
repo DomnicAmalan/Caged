@@ -65,8 +65,14 @@ const MoviePreview = ({ route }) => {
     }
 
     const  getColorFromURL = async(path) => {
-        const colors = await ImageColors.getColors(`https://image.tmdb.org/t/p/original/${path}`)
-        setColors(colors)
+        if(path !== null){
+            const colors = await ImageColors.getColors(`https://image.tmdb.org/t/p/original/${path}`)
+            setColors(colors)
+        }
+        else{
+            const colors = {"average": "#291B1B", "darkMuted": "#101010", "darkVibrant": "#B01018", "dominant": "#101010", "lightMuted": "#A8A8A8", "lightVibrant": "#000000", "muted": "#707070", "platform": "android", "vibrant": "#E81820"}
+            setColors(colors)
+        }
     }
 
     const videoUrl = async(id) => {
@@ -114,7 +120,6 @@ const MoviePreview = ({ route }) => {
         )
     }
 
-    console.log(movieDetails, "yyyyyyyyyyyyyyyyyyyyyyyyyyy")
     
     return(
         <View style={{flex: 1, backgroundColor:"black"}}>  
