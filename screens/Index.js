@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer, } from '@react-navigation/native';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import { MoviesTab, TV, HomePage, MoviePreview, User, TvPreview, Search } from './Home/Index';
 import Icon from 'react-native-vector-icons/Ionicons'
 import Icon2 from 'react-native-vector-icons/FontAwesome5'
@@ -20,7 +20,7 @@ const Home = () => {
     return(
         <View style={{flex:1}}>
             <NavigationContainer ref={HomeNavigation.homeNavRef}>
-                <HomeStack.Navigator headerMode="none" gestureEnabled={true} navigationOptions={{ gestureDirection: "horizontal", }}>
+                <HomeStack.Navigator headerMode="none" mode="card"  navigationOptions={{  gestureDirection:true, gestureDirection:"horizontal", transitionConfig: () => ({screenInterpolator: CardStackStyleInterpolator.forHorizontal,}) }}>
                     <HomeStack.Screen name="home" component={ HomePage } />
                     <HomeStack.Screen name="movies" component={ MoviesTab } />
                     <HomeStack.Screen name="tv" component={ TV } />

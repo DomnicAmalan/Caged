@@ -20,14 +20,14 @@ import {Login } from './screens/Home/Login';
 import NetInfo from "@react-native-community/netinfo";
 import {Configuration} from './screens/Configuration';
 import AsyncStorage from '@react-native-community/async-storage';
-import {ConfigurationContext } from './screens/contexts/configurationContext'
+import {ConfigurationContext } from './screens/contexts/configurationContext';
  
 
 const App: () => React$Node = () => {
 
   const [start, setStart] = useState(true);
   const [login, setLogin] = useState(null)
-  const [isInternetConnected, setInternetConnected] = useState(false);
+  const [isInternetConnected, setInternetConnected] = useState(true);
   const [configuration, setConfig] = useState({})
 
   useEffect(() => {
