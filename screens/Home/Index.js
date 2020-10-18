@@ -5,7 +5,8 @@ import { HomePage} from './Home';
 import { MoviePreview } from './MoviePreview';
 import { User } from './User';
 import { TvPreview} from './TvPreview';
-import {Search} from './Search'
+import {Search} from './Search';
+import {Player} from './VideoPlayer'
 
-export { MoviesTab , TV, HomePage, MoviePreview, User, TvPreview, Search }
+export { MoviesTab , TV, HomePage, MoviePreview, User, TvPreview, Search, Player }
  

@@ -1,15 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
 import {View, Text, FlatList, TouchableOpacity, Image, StatusBar} from 'react-native'
-import { Axios } from 'react-native-axios/lib/axios';
 import { getMovies } from '../apis/api';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Rating from './Rating';
 import * as HomeNavigation from '../Navigators/Homenavigations';
-import { ConfigurationContext } from '../contexts/configurationContext'
+import { ConfigurationContext } from '../contexts/configurationContext';
+import {Banner, NativeAds} from '../ADS/index'
 
 
 const TV = () => {
-    const [page, setPage] = useState(3);
+    const [page, setPage] = useState(1);
     const [tvList, setTvList] = useState([]);
     const { configuration } = useContext(ConfigurationContext)
     
@@ -38,11 +37,14 @@ const TV = () => {
     const renderItem = (item) => {
         return (
             <TouchableOpacity style={{flex:1}} onPress={() => HomeNavigation.navigate('tvpreview', {id: item.key})} 
-                     style={{flex:1,alignSelf: "center",//here you can use flex:1 also
-                     aspectRatio:1, marginVertical: 20, elevation:10}}>
-                    <View style={{flex:1, alignItems: "center", justifyContent: "center"}}>
-                        <Image style={{ height:150, width:100 }}  resizeMode='contain' source={{ uri: item.poster}}></Image>
-                    </View>
+                    style={{flex:1,alignItems:"center", justifyContent:"center",
+                    aspectRatio:1, marginVertical: 20, elevation:10}}>
+                    {item.poster !== null ?
+                        <Image style={{ height:150, width:100, borderRadius:20 }} resizeMode='contain' source={{ uri: item.poster}}></Image>
+                        : 
+                         <Text style={{color: "white", fontWeight:"bold", fontSize:12, paddingHorizontal:20}}>{item.title}</Text>
+                    }
+                    
             </TouchableOpacity>
         )
     }
@@ -67,6 +69,9 @@ const TV = () => {
                     onEndReachedThreshold={10}
                     keyExtractor={(item, index) => index.toString()}
                 />
+            </View>
+            <View style={{flex:1 ,maxHeight: 80}}>
+                <NativeAds />
             </View>
         </View>
     )

@@ -2,6 +2,14 @@
   package="com.caged">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <meta-data
+    android:name="JW_LICENSE_KEY"
+    android:value="Slbiy_6iMh4_LR0x8x77U2InU1d4WmFXeGhUMFkxVVRSUllYWXhSRWswY21SdFpqTkwn" />
+    
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
       android:usesCleartextTraffic="true"
@@ -11,6 +19,9 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+      <meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="ca-app-pub-1567332459331573~4517208829"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -20,9 +31,25 @@
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
+            <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
         </intent-filter>
       </activity>
+        <activity
+            android:name="com.facebook.ads.InterstitialAdActivity"
+            android:configChanges="keyboardHidden|orientation" />
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+      <receiver android:name="androidx.media.session.MediaButtonReceiver">
+          <intent-filter>
+              <action android:name="android.intent.action.MEDIA_BUTTON" />
+          </intent-filter>
+      </receiver>
+      <service
+          android:name="com.appgoalz.rnjwplayer.MediaPlaybackService"
+          android:exported="false">
+          <intent-filter>
+              <action android:name="android.intent.action.MEDIA_BUTTON" />
+          </intent-filter>
+      </service>
     </application>
 
 </manifest>

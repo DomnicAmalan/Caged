@@ -34,8 +34,15 @@ const genres = {
   
 };
 
-export const getImagePath = (path) =>
-  `https://image.tmdb.org/t/p/original${path}`;
+export const getImagePath = (path) =>{
+  if(path !== null){
+    return `https://image.tmdb.org/t/p/original${path}`;
+  }
+  else{
+    return null
+  }
+}
+  
 const getBackdropPath = (path) =>
   `https://image.tmdb.org/t/p/w370_and_h556_multi_faces${path}`;
 
@@ -52,9 +59,10 @@ export const getMovies = async (page, language, media_type) => {
       overview,
       release_date,
       genre_ids,
+      original_name
     }) => ({
       key: String(id),
-      title: title,
+      title: title ? title : original_name,
       poster: getImagePath(poster_path),
       backdrop: getBackdropPath(backdrop_path),
       rating: vote_average,
@@ -103,6 +111,7 @@ export const getItemById = async (type, Id) => {
   let certification = []
   try{
     const results = await Axios.get(API_URL)
+    console.log(results)
   
   
   if(type === 'tv'){

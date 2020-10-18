@@ -5,15 +5,18 @@ import ytdl from "react-native-ytdl"
 import VideoPlayer from 'react-native-video-player';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import * as HomeNavigation from '../Navigators/Homenavigations';
-import * as RNLocalize from "react-native-localize";
 import ImageColors from "react-native-image-colors";
 import {ConfigurationContext} from '../contexts/configurationContext';
 import Rating from './Rating';
+import {Banner, NativeAds} from '../ADS/index'
 
 const MoviePreview = ({ route }) => {
     const movieId = route.params.id
+    
+    const adUnitId =  'ca-app-pub-1567332459331573/48652737488';
 
     const {configuration} = useContext(ConfigurationContext)
 
@@ -25,13 +28,13 @@ const MoviePreview = ({ route }) => {
     const [currentTrailerIndex, setCurrentTrailerIndex] = useState(0);
     const [playNextTrailer, setPlaynextTrailer] = useState(true);
     const [certification, setCertification] =useState(null);
-    const [recommendations, setRecommendation] = useState([])
-
+    const [recommendations, setRecommendation] = useState([]);
+    const [data, setData] = useState(null);
+    const [movieGet, setMovie] = useState([])
 
     useEffect(() => {
         getMovieDetails();
-        
-    }, [])
+    },[])
 
     const getMovieDetails = async() => {
         const detailsMovie = await getItemById('movie',movieId);
@@ -120,6 +123,10 @@ const MoviePreview = ({ route }) => {
         )
     }
 
+    const RequestWorld = () => {
+        console.log("requeted to world")
+    }
+
     
     return(
         <View style={{flex: 1, backgroundColor:"black"}}>  
@@ -158,6 +165,8 @@ const MoviePreview = ({ route }) => {
                     }
                 </View>  
                 
+                
+                
                 <View 
                     style={{alignSelf: "flex-end", justifyContent: "center", right: 15, position: "absolute", marginVertical: 8}} 
                     >
@@ -166,6 +175,7 @@ const MoviePreview = ({ route }) => {
                         </TouchableOpacity>
                 </View>
             </View>
+            
             
             <View style={{flex:1, borderWidth: 0.3, borderBottomColor: "#9370DB", backgroundColor: "black",maxHeight: 200, marginTop: 10}}>
                 <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
@@ -193,11 +203,18 @@ const MoviePreview = ({ route }) => {
                 </View>
                 
                 <View style={{flexDirection:"row"}}>
-                    <TouchableOpacity style={{width: 100, marginHorizontal: 20,marginVertical: 30, flexDirection: "row" }}>
-                        <View style={{flex: 1, backgroundColor: "white", borderRadius: 2, marginHorizontal: 10, height: 40, justifyContent:"center", alignItems: "center", flexDirection: "row"}}>
-                            <Icon name="play" size={25}/>
-                            <Text style={{color: "black", fontWeight: "bold", fontSize: 20, fontWeight: "bold"}}>Play</Text>
-                        </View>
+                    <TouchableOpacity style={{width: 100, marginHorizontal: 20,marginVertical: 30, flexDirection: "row" }} onPress={() => RequestWorld()}>
+                        {movieGet.length ?
+                            <View style={{flex: 1, backgroundColor: "white", borderRadius: 2, marginHorizontal: 10, height: 40, justifyContent:"center", alignItems: "center", flexDirection: "row"}}>
+                                <Icon name="play" size={25}/>
+                                <Text style={{color: "black", fontWeight: "bold", fontSize: 20, fontWeight: "bold"}}>Play</Text>
+                            </View>: 
+                            <TouchableOpacity style={{flex: 1, backgroundColor: "white", borderRadius: 2, marginHorizontal: 10, height: 40, justifyContent:"center", alignItems: "center", flexDirection: "row"}}>
+                                <Icon2 name="crosshairs" size={25}/>
+                                <Text style={{color: "black", fontWeight: "bold", fontSize: 10, fontWeight: "bold", paddingHorizontal:5}}>Request</Text>
+                            </TouchableOpacity> 
+                        }
+                        
                     </TouchableOpacity> 
                     <TouchableOpacity style={{width: 200, marginHorizontal: 20,marginVertical: 30, flexDirection: "row" }}>
                         <View style={{flex: 1, backgroundColor: "#DCDCDC", borderRadius: 2, marginHorizontal: 20, height: 40, justifyContent:"center", alignItems: "center", flexDirection: "row"}}>
@@ -224,11 +241,14 @@ const MoviePreview = ({ route }) => {
                     keyExtractor={(item, index) => index.toString()}
                 />
             </View>
-            <View style={{flexDirection: "row", margin: 20, alignItems:"center", justifyContent:"center"}}>
+            <View style={{flex:1 ,maxHeight: 80}}>
+                <NativeAds />
+            </View>
+            {/* <View style={{flexDirection: "row", margin: 20, alignItems:"center", justifyContent:"center"}}>
                 <Text style={{color:"grey", fontWeight: "bold"}}>RELAEASE DATE: </Text>
                 <Text style={{color:"white", fontSize: 20, fontWeight:"bold"}}>{movieDetails.release_date}</Text>
             </View>
-            {Object.keys(movieDetails).length ? <Rating rating={movieDetails.vote_average} color="tomato"/> :<View style={{alignItems:"center"}}><Text style={{color: "grey", fontSize: 15, fontWeight:"bold"}}>Loading...</Text></View>}
+            {Object.keys(movieDetails).length ? <Rating rating={movieDetails.vote_average} color="tomato"/> :<View style={{alignItems:"center"}}><Text style={{color: "grey", fontSize: 15, fontWeight:"bold"}}>Loading...</Text></View>} */}
         </View>
     )
 }

@@ -21,7 +21,7 @@ import NetInfo from "@react-native-community/netinfo";
 import {Configuration} from './screens/Configuration';
 import AsyncStorage from '@react-native-community/async-storage';
 import {ConfigurationContext } from './screens/contexts/configurationContext';
- 
+import RNFetchBlob from 'react-native-fetch-blob'
 
 const App: () => React$Node = () => {
 
@@ -33,22 +33,19 @@ const App: () => React$Node = () => {
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       setInternetConnected(state.isConnected);
-
+      
       
     });
     getConfiguration();
     unsubscribe();
-    console.log(isInternetConnected)
-
+    // console.log(isInternetConnected)
     setTimeout(() => {
       setStart(false)
 
     }, 3000)
   }, [isInternetConnected])
-
   const getConfiguration = async () => {
     try {
-
       // await AsyncStorage.removeItem('configs')
       const config = await AsyncStorage.getItem('configs')
       setConfig(JSON.parse(config))

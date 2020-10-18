@@ -7,6 +7,7 @@ import useDebounce from './Debounce';
 import {searchItem, getImagePath} from '../apis/api'
 import { FlatList, ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import * as HomeNavigation from '../Navigators/Homenavigations';
+import {Banner, NativeAds} from '../ADS/index'
 
 const { width, height } = Dimensions.get("window");
 const Search = ({route}) => {
@@ -87,12 +88,16 @@ const Search = ({route}) => {
                               enableEmptySections={false}
                           />
                       </ScrollView>: 
-                      <Text style={{flex:1, color: "white", fontSize:40, fontWeight:"bold", alignSelf:"center"}}>No Resuts</Text>}
+                      <View style={{flex:1, maxHeight:50, maxWidth:"100%", alignItems:"center", marginTop: 10}}>
+                          <Text style={{flex:1, color: "white", fontSize:40, fontWeight:"bold", alignSelf:"center"}}>No Resuts</Text>
+                      </View>
+                      }
                     </View>
-                    
                   }
                 </View>
-                  
+              <View style={{flex:1, maxHeight:80,marginTop: 10}}>
+                  <NativeAds />
+              </View>
               <TextInput onChangeText={(text) => setsearchString(text)} placeholder={"Search"} placeholderTextColor={"grey"} style={{color:"white", textAlign:"left", textAlignVertical:"center", fontSize:10,fontWeight:"bold", backgroundColor: "rgba(142, 142, 147, 0.06)", width:"100%", maxHeight: 35, borderRadius: 8, width:"100%"}}/>
               <View style={{flex:1, bottom:5, alignSelf:"flex-end",alignItems:"center", position:"absolute", backgroundColor:"white", width:100, maxHeight:35, backgroundColor:"black"}}>
                   <View style={{flex:1, justifyContent:"space-between", flexDirection:"row", alignItems:"center"}}>

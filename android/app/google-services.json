@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "210517716191",
+    "firebase_url": "https://caged-72f5c.firebaseio.com",
+    "project_id": "caged-72f5c",
+    "storage_bucket": "caged-72f5c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:210517716191:android:808fc6ec30166839cf4d6a",
+        "android_client_info": {
+          "package_name": "com.caged"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "210517716191-kisu65pbag774ktj8i2pgve2v6fpjl50.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB50bSexY1ZwcUMbLXyHrVs1kxp8J_zVsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "210517716191-kisu65pbag774ktj8i2pgve2v6fpjl50.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-1567332459331573~4517208829"
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,7 +10,7 @@ import {ConfigurationContext} from '../contexts/configurationContext';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { Picker } from '@react-native-community/picker';
 import Rating from './Rating';
-
+import {Banner, NativeAds} from '../ADS/index'
 
 const TvPreview =({ route }) => {
     const tvId = route.params.id
@@ -157,7 +157,6 @@ const TvPreview =({ route }) => {
         
         return value
     }
-
     return(
         <View style={{flex:1,backgroundColor: "black"}}>
             <View style={{flex:1,backgroundColor: "black", maxHeight: 180}}>
@@ -168,7 +167,7 @@ const TvPreview =({ route }) => {
                         <>
                             <VideoPlayer
                                 key={currentTrailerIndex}
-                                video={{ uri: videos[currentTrailerIndex].url }}
+                                video={{ uri: videos[currentTrailerIndex].url}}
                                 // autoplay={true}
                                 onEnd={onEnd}
                                 useNativeControls
@@ -272,11 +271,14 @@ const TvPreview =({ route }) => {
                     {renderEpisode()}
                 </ScrollView>
             </View>
-            <View style={{flexDirection: "row", margin: 20, alignItems:"center", justifyContent:"center"}}>
+            <View style={{flex:1, marginTop: 10, maxHeight: 80}}>
+                <NativeAds />
+            </View>
+            {/* <View style={{flexDirection: "row", margin: 20, alignItems:"center", justifyContent:"center"}}>
                 <Text style={{color:"grey", fontWeight: "bold"}}>AIR DATE: </Text>
                 <Text style={{color:"white", fontSize: 20, fontWeight:"bold"}}>{episodes.air_date}</Text>
-            </View>
-            {Object.keys(tv).length ? <Rating rating={tv.vote_average} color="tomato"/> : <View style={{alignItems:"center"}}><Text style={{color: "grey", fontSize: 15, fontWeight:"bold"}}>Loading...</Text></View>}
+            </View> */}
+            {/* {Object.keys(tv).length ? <Rating rating={tv.vote_average} color="tomato"/> : <View style={{alignItems:"center"}}><Text style={{color: "grey", fontSize: 15, fontWeight:"bold"}}>Loading...</Text></View>} */}
         </View>
     )
 }
