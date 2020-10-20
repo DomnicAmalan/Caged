@@ -76,6 +76,9 @@ const App = () => {
       const newData = [...data, ...data];
       setData(newData);
     }
+    return () => {
+      setData()
+    }
   });
 
   React.useEffect(() => {

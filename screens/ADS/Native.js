@@ -17,7 +17,9 @@ const NativeAds = () => {
 
 
     useEffect(() => {
-        
+        return () => {
+          setRetry()
+        }
     }, [retry])
 
 
@@ -43,30 +45,33 @@ const NativeAds = () => {
           style={{
             height: 100,
             width: "100%",
+            flexDirection: "row"
           }}
         >
           {/* <AdBadge /> */}
           <View
             style={{
-              height: 100,
+              height: 80,
               width: "100%",
               flexDirection: "row",
               justifyContent: "flex-start",
               alignItems: "center",
               paddingHorizontal: 10,
+              flexDirection: "row"
             }}
           >
             <IconView
               style={{
-                width: 60,
-                height: 60,
+                width: 50,
+                height: 50,
               }}
             />
             <View
               style={{
                 width: "65%",
-                maxWidth: "65%",
+                maxWidth: "40%",
                 paddingHorizontal: 6,
+                // flexDirection: "row"
               }}
             >
               <HeadlineView
@@ -83,33 +88,36 @@ const NativeAds = () => {
                   color: "purple"
                 }}
               />
+              
               <AdvertiserView
                 style={{
                   fontSize: 10,
                   color: "gray",
                 }}
               />
+              <CallToActionView
+                style={{
+                  height: 30,
+                  paddingHorizontal: 12,
+                  backgroundColor: "purple",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 5,
+                  elevation: 10,
+                  width:50
+                }}
+                textStyle={{ color: "white", fontSize: 8 }}
+              />
             </View>
             <MediaView
                 style={{
-                    width: "100%",
-                    height: 250,
+                    width: "50%",
+                    height: 200,
+                    
                 }}
             />
-
-            <CallToActionView
-              style={{
-                height: 45,
-                paddingHorizontal: 12,
-                backgroundColor: "purple",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 5,
-                elevation: 10,
-                
-              }}
-              textStyle={{ color: "white", fontSize: 14 }}
-            />
+            
+            
           </View>
         </View>
       </NativeAdView>

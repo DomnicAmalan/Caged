@@ -179,3 +179,36 @@ export const searchItem = async(page,type, query) => {
   return results.data
 }
 
+export const MovieDownloadDetails = async(imdb_id) => {
+  try{
+    const API_URL = `https://api.apipop.net/movie?imdb=${imdb_id}`;
+    const results = await Axios.get(API_URL)
+    const returnData =  results.data.items.map(
+      ({
+        file,
+        id,
+        quality,
+        torrent_magnet,
+        torrent_peers,
+        torrent_seeds,
+        torrent_url,
+        vitality
+      }) => 
+      ({
+        FileName: file,
+        Hash: id,
+        Quality: quality,
+        magnetLink: torrent_magnet,
+        Peers: torrent_peers,
+        Seeds: torrent_seeds,
+        torrentFile: torrent_url,
+        vitals: vitality
+      })
+    )
+    return returnData
+  }
+  catch(e){
+    return null
+  }
+  
+}

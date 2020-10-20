@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Animated, FlatList, Dimensions, Image } from 'react-native';
-import {getItemById, getVideos, getMovieRecommendations} from '../apis/api';
+import {getItemById, getVideos, getMovieRecommendations, MovieDownloadDetails} from '../apis/api';
 import ytdl from "react-native-ytdl"
 import VideoPlayer from 'react-native-video-player';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -11,12 +11,11 @@ import * as HomeNavigation from '../Navigators/Homenavigations';
 import ImageColors from "react-native-image-colors";
 import {ConfigurationContext} from '../contexts/configurationContext';
 import Rating from './Rating';
-import {Banner, NativeAds} from '../ADS/index'
+import {Banner, NativeAds} from '../ADS/index';
 
 const MoviePreview = ({ route }) => {
     const movieId = route.params.id
     
-    const adUnitId =  'ca-app-pub-1567332459331573/48652737488';
 
     const {configuration} = useContext(ConfigurationContext)
 
@@ -30,16 +29,22 @@ const MoviePreview = ({ route }) => {
     const [certification, setCertification] =useState(null);
     const [recommendations, setRecommendation] = useState([]);
     const [data, setData] = useState(null);
-    const [movieGet, setMovie] = useState([])
+    const [movieGet, setMovie] = useState([]);
+    const [torrents, setTorrents] = useState([])
 
     useEffect(() => {
         getMovieDetails();
+        return() => {
+            getMovieDetails()
+        }
     },[])
 
     const getMovieDetails = async() => {
         const detailsMovie = await getItemById('movie',movieId);
-        setMovieDetails(detailsMovie)
-
+        const downloadDetails = await MovieDownloadDetails(detailsMovie.imdb_id)
+        setTorrents(downloadDetails);
+       
+        setMovieDetails(detailsMovie);
         const {results} = await getVideos('movie',movieId)
         const recommendations = await getMovieRecommendations('movie',movieId);
         setRecommendation(recommendations)
@@ -79,6 +84,7 @@ const MoviePreview = ({ route }) => {
     }
 
     const videoUrl = async(id) => {
+        console.log(id)
         const youtubeURL = `http://www.youtube.com/watch?v=${id}`;
         try{
             const urls = await ytdl(youtubeURL, { quality: 'highest', filter: format => format.container === 'mp4' })
@@ -131,7 +137,6 @@ const MoviePreview = ({ route }) => {
     return(
         <View style={{flex: 1, backgroundColor:"black"}}>  
             <View style={{flex:1,backgroundColor: "black", maxHeight: 180}}>
-                
                 <View style={{flex:1, justifyContent: "center"}}>
                     {trailerLoad ? <Text style={{color: "white", fontSize: 15, alignSelf: "center"}}> Loading Trailers... </Text> : 
                         videos.length ?
@@ -241,7 +246,8 @@ const MoviePreview = ({ route }) => {
                     keyExtractor={(item, index) => index.toString()}
                 />
             </View>
-            <View style={{flex:1 ,maxHeight: 80}}>
+            <View style={{flex:1 ,maxHeight: 80, justifyContent: "flex-end"}}>
+                
                 <NativeAds />
             </View>
             {/* <View style={{flexDirection: "row", margin: 20, alignItems:"center", justifyContent:"center"}}>

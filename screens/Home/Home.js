@@ -123,7 +123,11 @@ export const HomePage = () => {
     };
    
     fetchData(movies);
-    
+    return () => {
+      setLanguage();
+      // fetchData();
+      
+    }
   }, [mediaType, showRegional, language]);
 
   if (movies.length === 0) {

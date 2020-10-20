@@ -43,6 +43,10 @@ const App: () => React$Node = () => {
       setStart(false)
 
     }, 3000)
+    return () => {
+      unsubscribe();
+      clearTimeout();
+    }
   }, [isInternetConnected])
   const getConfiguration = async () => {
     try {

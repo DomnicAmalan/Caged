@@ -28,6 +28,10 @@ const Search = ({route}) => {
       } else {
         setSearchResults([]);
       }
+      return ()=> {
+       
+        searchData();
+      }
     }, [debouncedSearchTerm, currentSearch])
 
     const searchData  = async() => {

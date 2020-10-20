@@ -34,6 +34,10 @@ const Configuration = ({setConfig}) => {
         let languageCheck = language !== null ? true : false
         let countryCheck = country!== null ? true: false
         setCurrentError(!languageCheck&&countryCheck)
+
+        return () => {
+            setCurrentError()
+        }
     },[language, country])
     
 

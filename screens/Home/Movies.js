@@ -14,7 +14,10 @@ const MoviesTab = () => {
     
 
     useEffect(() => {
-        paginatedData()
+        paginatedData();
+        return () => {
+            paginatedData()
+        }
     }, [])
 
     const paginatedData = async() => {
